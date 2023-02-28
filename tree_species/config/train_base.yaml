@@ -1,0 +1,108 @@
+optimizer:
+  #  16*1//2 64, 20, 20, 128
+  train_batch: 64
+  val_batch: 64
+  test_batch: 64
+  #  bce 0.000001 ce 0.000000001
+  #  pretrain ce:0.001, bce: 0.001
+  lr: [0.00005, 0.000005]
+  momentum: 0.9
+  weight_decay: 5.0e-4
+  drop_rate: 0.5
+
+  #  scheduler:
+  #    patience: 100
+  #    factor: 0.9
+
+  #warm up+multistep learning rate
+  scheduler:
+    #    The warm up lr =  warm_up_lr_rate *lr
+    warm_up_lr: 0.001
+    warm_up_epochs: -5
+    milestones: [500, 800, 900]
+
+  #warm up+consine learning rate
+  #  scheduler:
+  ##    The warm up lr =  warm_up_lr_rate *lr
+  #    warm_up_lr_rate: 0.01
+  #    warm_up_epochs: 10
+  #    cycle_epoch: 300
+
+
+  gamma: 0
+  alpha: None
+
+  pretrain: True
+
+loss:
+  loss_weights:
+    cls: 1
+
+
+  sup_loss: 'ce'
+  num_classes: 3
+
+step:
+  epochs: 501
+  start_epoch: 0
+  save_interval: 1000
+  #10
+  val_epochs: 10
+  #  50 100
+  test_epochs: 10
+#  test_epochs: 500
+
+
+path:
+  checkpoint: /home/khtt/code/pytorch-classification/tree_species/output/base
+
+dataset:
+
+  root: &base '/dataset/khtt/dataset/pine2022/pine_tree_species'
+  img_path: !!python/object/apply:os.path.join [ *base, 'img' ]
+
+  class_names: ['pine', 'beauty', 'black']
+
+  train_txt: !!python/object/apply:os.path.join [ *base, 'train.txt' ]
+  val_txt: !!python/object/apply:os.path.join [ *base, 'val+test.txt' ]
+  test_txt: !!python/object/apply:os.path.join [ *base, 'test.txt' ]
+
+  img_size: 224
+
+
+model:
+  #      model是下面的参数
+  #      resnet
+  #      resnet.resnet18， resnet.resnet34, resnet.resnet50, resnet.resnet101, resnet.resnet152,
+  #       resnet.resnext50_32x4d, resnet.resnext101_32x8d, resnet.wide_resnet50_2, resnet.wide_resnet101_2
+  #
+  #      vgg
+  #      vgg.vgg11 vgg.vgg11_bn vgg.vgg13 vgg.vgg13_bn vgg.vgg16 vgg.vgg16_bn
+  #      vgg.vgg19 vgg.vgg19_bn
+  #   self_build.custom_openset
+  #  hrnet_w32 hrnet_w40 hrnet_w44 hrnet_w48 hrnet_w64
+
+  model_name: resnet.resnext101_32x8d
+  start_nb_channels: 3
+  #  the pooling rate for final layer
+  last_downsampling: 2
+  fc1_nodes: 64
+  pretrained: True
+  num_classes: 3
+  drop_rate: 0.5
+
+openset:
+  ood_method: 'msp'
+  distance_type: 'cosine'
+  open_threshold: 0.85
+
+others:
+  seed: 0
+  num_workers: 6
+  show_info: True
+
+  best_save_metrics: ['accuracy']
+
+  analyse_best: False
+
+  comment: '_tp'

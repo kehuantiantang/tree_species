@@ -61,6 +61,7 @@ dataset:
   root: &base '/dataset/khtt/dataset/pine2022/pine_tree_species'
   img_path: !!python/object/apply:os.path.join [ *base, 'img' ]
 
+
 #  class_names: ['pine_init', 'pine_middle', 'beauty_late', 'beauty_init', 'beauty_middle', 'pine_late',
 #                'black_init', 'black_middle', 'black_late']
 
